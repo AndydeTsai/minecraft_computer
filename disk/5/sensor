@@ -1,0 +1,17 @@
+local sensor = peripheral.wrap("openperipheral_sensor_0")
+local player = sensor.getPlayers()
+local state = false
+while 1 do
+ term.clear()
+ term.setCursorPos(1,2)
+ player = sensor.getPlayers()
+ if player[1] == nil then
+  print(" no one")
+  state = false
+ else
+  print(" some one")
+  state = true
+ end
+ rs.setOutput("right",state)
+ sleep(1)
+end

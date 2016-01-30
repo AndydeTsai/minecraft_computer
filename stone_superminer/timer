@@ -1,0 +1,23 @@
+local wait
+local input
+local run
+term.clear()
+term.setCursorPos(2,2)
+term.write("set time : ")
+input = io.read()
+wait = tonumber(input)
+term.setCursorPos(2,3)
+term.write("set run : ")
+input = io.read()
+run = input
+while wait > 0 do
+  term.clear()
+  term.setCursorPos(2,2)
+  term.write("wait ")
+  term.write(wait)
+  term.write(" to run ")
+  term.write(run)
+  wait = wait-1
+  sleep(1)
+end
+shell.run(run)

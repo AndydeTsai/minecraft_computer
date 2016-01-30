@@ -1,0 +1,51 @@
+--this program is used to craft AE2 crystal.
+--another: danny50610
+
+function isSeedCrystal(slotNum)
+    data = turtle.getItemDetail(slotNum)
+    return data and data.name == "appliedenergistics2:item.ItemCrystalSeed"
+end
+
+function isPureCrystal(slotNum)
+    data = turtle.getItemDetail(slotNum)
+    return data and data.name == "appliedenergistics2:item.ItemMultiMaterial" and
+        (data.damage == 10 or data.damage == 11 or data.damage == 12 or data.damage == 7)
+end
+
+function isFluixCrystalMaterial(slotNum)
+    data = turtle.getItemDetail(slotNum)
+    return data and (
+        data.name == "minecraft:quartz" or
+        data.name == "minecraft:redstone" or
+        (data.name == "appliedenergistics2:item.ItemMultiMaterial" and data.damage == 1)
+    )
+end
+
+function checkCrystal()
+    isNeedPower = false
+    
+    for i = 1, 16 do
+        if isPureCrystal(i) then
+            turtle.select(i)
+            turtle.drop()
+        elseif isSeedCrystal(i) or isFluixCrystalMaterial(i) then
+            turtle.select(i)
+            isNeedPower = turtle.dropDown()
+        end
+    end
+    redstone.setOutput("left", not isNeedPower)
+end
+
+local timeId_checkCrystal = os.startTimer(10)
+
+while true do
+    local event, p1 = os.pullEvent()
+    
+    if event == "timer" and p1 == timeId_checkCrystal then
+        for i = 1, 16 do
+            turtle.suckDown()
+        end
+        checkCrystal()
+        timeId_checkCrystal = os.startTimer(10)
+    end
+end

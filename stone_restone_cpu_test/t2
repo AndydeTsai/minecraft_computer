@@ -1,0 +1,10 @@
+while true do
+  os.pullEvent("redstone")
+  print("redstone event")
+  
+  if rs.getInput("left") then
+    rs.setAnalogOutput("right", 5)
+  elseif rs.getInput("back") then
+    rs.setAnalogOutput("right", 10)
+  end
+end

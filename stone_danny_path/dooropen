@@ -1,0 +1,19 @@
+rs.setOutput("right",false)
+rs.setOutput("back",false)
+rs.setOutput("front",false)
+sleep(0.5)
+rs.setOutput("back",true)
+rs.setOutput("front",true)
+sleep(0.5)
+rs.setOutput("back",false)
+rs.setOutput("front",false)
+while true do
+   os.pullEvent("redstone")
+   term.clear()
+   term.setCursorPos(1,2)
+   print("running dooropen")
+   print("wait for open door event")
+   if rs.getInput("right") == true then
+      shell.run("sensor")
+   end
+end

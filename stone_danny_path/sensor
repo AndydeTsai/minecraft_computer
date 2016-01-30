@@ -1,0 +1,39 @@
+local sensor = {
+  peripheral.wrap("openperipheral_sensor_2"),
+  peripheral.wrap("openperipheral_sensor_3"),
+  peripheral.wrap("openperipheral_sensor_4"),
+  peripheral.wrap("openperipheral_sensor_5"),
+  peripheral.wrap("openperipheral_sensor_6")
+}
+local state = true
+function detect_player()
+  re = false
+  i = 1
+  while i <= 5 do
+    sensor_n = sensor[i]
+    player =  sensor_n.getPlayers()
+    if player[1] ~= nil then
+      re = true
+    end
+    i = i + 1
+  end
+  return re
+end
+term.clear()
+term.setCursorPos(1,2)
+print("running sensor")
+print("door open")
+sleep(13)
+while state do
+  state = detect_player()
+  sleep(1)
+end
+term.clear()
+term.setCursorPos(1,2)
+print("running sensor")
+print("door close")
+rs.setOutput("back",true)
+rs.setOutput("front",true)
+sleep(5)
+rs.setOutput("back",false)
+rs.setOutput("front",false)

@@ -1,0 +1,13 @@
+local strength = 0
+
+while true do
+  rs.setAnalogOutput("right", strength)
+  
+  if strength == 15 then
+    strength = 0
+  else
+    strength = strength + 1
+  end
+  
+  sleep(1)
+end

@@ -1,0 +1,9 @@
+local arg = {...}
+local N = tonumber(arg[1])
+for i = 0, N do
+  while not turtle.placeDown() do
+    print("no dire")
+    sleep(1)
+  end
+  turtle.forward()
+end

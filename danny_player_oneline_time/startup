@@ -1,0 +1,4 @@
+shell.run("showTime")
+print("shutdown in 5s, press ctrl + t to cancel")
+sleep(5)
+shell.run("shutdown")

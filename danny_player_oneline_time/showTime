@@ -1,0 +1,101 @@
+local monitor = peripheral.wrap("right")
+local wSize, hSize = monitor.getSize()
+local MaxSeconds = 0
+
+monitor.clear()
+monitor.setCursorPos(1,1)
+monitor.setTextScale(1)
+
+function tablecomp(a,b)
+    return not (a.onlineTime < b.onlineTime)
+end
+
+function leftString(str, w)
+    return str .. string.rep(" ", w - string.len(str))
+end
+
+function rightString(str, w)
+    return string.rep(" ", w - string.len(str)) .. str
+end
+
+function fromatTime(seconds)
+    dd = math.floor(seconds / 86400)
+    hh = math.floor(seconds / 3600 % 24)
+    mm = math.floor(seconds / 60 % 60)
+    ss = math.floor(seconds % 60)
+    return string.format("%03d-%02d:%02d:%02d", dd, hh, mm, ss);
+end
+
+function getBarLine(seconds, barW)
+    lenght =  math.floor(barW * (seconds / MaxSeconds))
+    return string.rep("#", lenght)
+end
+
+local PlayerOnlineTime = {}
+local updataInfo = ""
+local DataRangeInfo = ""
+local ServerOnlineTimeInfo = 0
+
+h = fs.open("PlayerOnlineTime.txt", "r")
+while true do 
+    str = h.readLine()
+    if str == nil then break end
+    index = string.find(str, ',')
+    if index ~= nil then
+        table.insert(PlayerOnlineTime, {player = string.sub(str, 0, index - 1), onlineTime = tonumber(string.sub(str, index + 1))});
+    else
+        if string.find(str, "Updata:") ~= nil then
+            updataInfo = str
+        elseif string.find(str, "DataRange:") ~= nil then
+            DataRangeInfo = str
+        elseif string.find(str, "ServerOnlineTime:") ~= nil then
+            index = string.find(str, ':')
+            ServerOnlineTimeInfo = tonumber(string.sub(str, index + 1))
+        end
+    end
+end
+h.close()
+table.sort(PlayerOnlineTime, tablecomp);
+MaxSeconds = PlayerOnlineTime[1].onlineTime
+
+local countFields = 3
+local nameW = 15
+local timeW = 12
+local barW = wSize - (nameW + timeW + (countFields + 1))
+local yStart = 2
+local yEnd = hSize - 2
+local yHeight = yEnd - yStart + 1
+for y = 1, yHeight do
+    local Line = ""
+    if y % 2 == 1 then
+        Line = "+" .. string.rep("-", nameW) .. "+" .. string.rep("-", timeW) .. "+" .. string.rep("-", barW) .. "+"
+    elseif y == 2 then
+        Line = "|" .. leftString("Player", nameW) .. "|" .. leftString("OnlineTime", timeW) .. "|" .. leftString("Scale Bar", barW) .. "|"
+    elseif y % 2 == 0 and y <= yHeight - 1 then
+        index = y / 2 - 1
+        if index <= #PlayerOnlineTime then
+            Line = "|" .. leftString(PlayerOnlineTime[index].player, nameW) .. "|" .. rightString(fromatTime(PlayerOnlineTime[index].onlineTime),timeW) .. "|" .. leftString(getBarLine(PlayerOnlineTime[index].onlineTime, barW), barW) .. "|"
+        else
+            Line = "|" .. string.rep(" ", nameW) .. "|" .. string.rep(" ", timeW) .. "|" .. string.rep(" ", barW) .. "|"
+        end
+    end
+    monitor.setCursorPos(1,y + yStart - 1)
+    monitor.write(Line)
+end
+--ServerOnlineTimeInfo
+monitor.setCursorPos(1,1)
+monitor.write("ServerOnlineTime: " .. fromatTime(ServerOnlineTimeInfo))
+--DataRangeInfo
+monitor.setCursorPos(1,hSize - 1)
+monitor.write(rightString(DataRangeInfo, wSize))
+--ServerOnlineTimeInfo
+monitor.setCursorPos(1,hSize)
+monitor.write(rightString(updataInfo, wSize))
+
+
+for i=1,#PlayerOnlineTime do
+    print(PlayerOnlineTime[i].player .. "|" .. PlayerOnlineTime[i].onlineTime)
+end
+print(updataInfo)
+print(DataRangeInfo)
+print("ServerOnlineTime:" .. fromatTime(ServerOnlineTimeInfo))

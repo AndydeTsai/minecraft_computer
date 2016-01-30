@@ -1,0 +1,30 @@
+local mfe
+local max = 0
+local current = 0
+local use = 0
+local state = flase
+mfe = peripheral.wrap("back")
+max = mfe.getEUCapacity() / 1000
+while rs.getInput("right") == false do
+  current = mfe.getEUStored() / 1000
+  term.clear()
+  term.setCursorPos(1, 2)
+  term.write(" max = ")
+  term.write(max)
+  print(" K")
+  term.write(" current = ")
+  term.write(current)
+  print(" K")
+  use = current * 100 / max
+  term.write(" use = ")
+  print(use)
+  if use > 90 then
+    state = true
+  elseif use < 50 then
+    state = false
+  end
+  rs.setOutput("bottom",state)
+  term.write(" state = ")
+  print(state)
+  sleep(3)
+end

@@ -1,0 +1,23 @@
+term.clear()
+local red = 0
+local keyup = true
+
+while red >=-1 do
+  if keyup then
+    if redstone.getInput("front") and red < 15 then
+      red=red+1
+      keyup = false
+    elseif redstone.getInput("right") and red > 0 then
+      red=red-1
+      keyup = false
+    end
+  else
+    if not redstone.getInput("front") and not redstone.getInput("right") then
+      keyup = true
+    end
+  end
+  term.setCursorPos(2, 1)
+  print(red) 
+  redstone.setAnalogOutput("back", red)
+  sleep(0.05)
+end

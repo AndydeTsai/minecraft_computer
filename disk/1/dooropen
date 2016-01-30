@@ -1,0 +1,8 @@
+rs.setOutput("right",false)
+rs.setOutput("back",false)
+while true do
+   os.pullEvent("redstone")
+   if rs.getInput("right") == true then
+      shell.run("sensor")
+   end
+end

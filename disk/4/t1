@@ -1,0 +1,13 @@
+term.clear()
+local red = 0
+
+while red >=-1 do
+  os.pullEvent("redstone")
+  if redstone.getInput("back") and red < 15 then
+    red=red+1
+  elseif redstone.getInput("right") and red > 0 then
+    red=red-1
+  end
+  print(red)
+  redstone.setAnalogOutput("front", red)
+end

@@ -1,0 +1,37 @@
+local currEng = 0
+local maxEng = 0
+local useEng = 0
+local lastEng = 0
+local state = false
+r=peripheral.wrap("back")
+maxEng = r.getMaxEnergyStored() / 1000
+while rs.getInput("right")==false do
+  lastEng = currEng
+  currEng = r.getEnergyStored() / 1000
+  term.clear()
+  term.setCursorPos(1,2)
+  term.write(" Max Energy : ")
+  term.write(maxEng)
+  print(" K ")
+  term.write(" Current Energy : ")
+  term.write(currEng)
+  print(" K ")
+  useEng = currEng *100 / maxEng
+  term.write(" Use : ")
+  term.write(useEng)
+  print("%")
+  if useEng < 50 then
+    state = true
+  elseif useEng >90 then
+    state = false
+  else
+  end
+  rs.setOutput("back",state)
+  term.write(" state : ")
+  print(state)
+  term.write(" rate : ")  
+  term.write( ((currEng - lastEng) * 50) / 3 )
+  print(" RF / t")
+  sleep(3)
+end
+term.clear()
